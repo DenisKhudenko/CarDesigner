@@ -14,4 +14,7 @@
     <Folder Include="Factories\" />
     <Folder Include="Builders\" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\CarDesigner.DAL\CarDesigner.DAL.csproj" />
+  </ItemGroup>
 </Project>

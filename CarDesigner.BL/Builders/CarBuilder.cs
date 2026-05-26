@@ -4,14 +4,45 @@ namespace CarDesigner.BL.Builders;
 
 public class CarBuilder
 {
-    private string _name;
+    private string? _name;
     private Body? _body;
     private List<Engine> _engine;
     private List<Tires> _tires;
     private List<Light> _light;
+
+    public CarBuilder SetName(string name)
+    {
+        _name = name;
+        return this;
+    }
+
+    public CarBuilder SetBody(Body body)
+    {
+        _body = body;
+        return this;
+    }
+
+    public CarBuilder AddEngine(Engine engine)
+    {
+        _engine.Add(engine);
+        return this;
+    }
+
+    public CarBuilder AddTires(Tires tires)
+    {
+        _tires.Add(tires);
+        return this;
+    }
+
+    public CarBuilder AddLight(Light light)
+    {
+        _light.Add(light);
+        return this;
+    }
     
     public CarBuilder Reset()
     {
+        _name = null;
         _body = null;
         _engine.Clear();
         _tires.Clear();
@@ -19,4 +50,12 @@ public class CarBuilder
 
         return this;
     }
+
+    /*public Car Build()
+    {
+        return new Car()
+        {
+            Name = _name
+        };
+    }*/
 }

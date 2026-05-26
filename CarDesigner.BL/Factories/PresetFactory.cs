@@ -1,9 +1,9 @@
 ﻿
 namespace CarDesigner.BL.Factories
 {
-	public class PartFactory
+	public class PresetFactory
 	{
-		public PartFactory()
+		public PresetFactory()
 		{
 		}
 	}

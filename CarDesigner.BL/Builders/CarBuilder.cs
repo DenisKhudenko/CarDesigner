@@ -51,11 +51,43 @@ public class CarBuilder
         return this;
     }
 
-    /*public Car Build()
+    private int CalcHorsepower()
     {
+        return 0;
+    }
+    
+    private int CalcWeight()
+    {
+        return 0;
+    }
+    
+    private int CalcPrice()
+    {
+        return 0;
+    }
+
+    public bool Validate()
+    {
+        return true;
+    }
+    
+    public Car? Build()
+    {
+        bool validated = Validate();
+        if (!validated) return null;
+        
         return new Car()
         {
-            Name = _name
+            Id = Guid.NewGuid().ToString(),
+            Name = _name,
+            Horsepower = CalcHorsepower(),
+            Weight = CalcWeight(),
+            Price = CalcPrice(),
+            Parts = new List<Part>()
+                .Union(_engine)
+                .Union(_tires)
+                .Union(_light)
+                .ToList()
         };
-    }*/
+    }
 }

@@ -1,4 +1,5 @@
-﻿using CarDesigner.DAL.Models;
+﻿using CarDesigner.BL.Exceptions;
+using CarDesigner.DAL.Models;
 
 namespace CarDesigner.BL.Builders;
 
@@ -6,9 +7,9 @@ public class CarBuilder
 {
     private string? _name;
     private Body? _body;
-    private List<Engine> _engine;
-    private List<Tires> _tires;
-    private List<Light> _light;
+    private List<Engine> _engine = new List<Engine>();
+    private List<Tires> _tires = new List<Tires>();
+    private List<Light> _light = new List<Light>();
 
     public CarBuilder SetName(string name)
     {
@@ -22,21 +23,21 @@ public class CarBuilder
         return this;
     }
 
-    public CarBuilder AddEngine(Engine engine)
+    public CarBuilder AddEngine(Engine engine, int partQuantity = 1)
     {
-        _engine.Add(engine);
+        for (int i = 0; i < partQuantity; i++) _engine.Add(engine);    
         return this;
     }
 
-    public CarBuilder AddTires(Tires tires)
+    public CarBuilder AddTires(Tires tires, int partQuantity = 1)
     {
-        _tires.Add(tires);
+        for (int i = 0; i < partQuantity; i++) _tires.Add(tires);
         return this;
     }
 
-    public CarBuilder AddLight(Light light)
+    public CarBuilder AddLight(Light light, int partQuantity = 1)
     {
-        _light.Add(light);
+        for (int i = 0; i < partQuantity; i++) _light.Add(light);
         return this;
     }
     
@@ -53,28 +54,43 @@ public class CarBuilder
 
     private int CalcHorsepower()
     {
-        return 0;
+        return _engine.Sum(x => x.Horsepower);
     }
     
     private int CalcWeight()
     {
-        return 0;
+        return _body.Weight 
+               + new List<Part>()
+                    .Union(_engine)
+                    .Union(_tires)
+                    .Union(_light)
+                    .Sum(x => x.Weight);
     }
     
     private int CalcPrice()
     {
-        return 0;
+        return _body.Price 
+               + new List<Part>()
+                   .Union(_engine)
+                   .Union(_tires)
+                   .Union(_light)
+                   .Sum(x => x.Price);
     }
 
-    public bool Validate()
+    public IReadOnlyList<CarDesignerException> Validate()
     {
-        return true;
+        var errors = new List<CarDesignerException>();
+        if (_body == null) errors.Add(new MissingRequiredPartException("Кузов"));
+        if (_engine.Count == 0) errors.Add(new MissingRequiredPartException("Двигатель"));
+        if (_tires.Count == 0) errors.Add(new MissingRequiredPartException("Колеса"));
+        
+        return errors;
     }
     
     public Car? Build()
     {
-        bool validated = Validate();
-        if (!validated) return null;
+        var errors = Validate();
+        if (errors.Count > 0) throw errors[0];
         
         return new Car()
         {

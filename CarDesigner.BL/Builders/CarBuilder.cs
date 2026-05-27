@@ -7,9 +7,9 @@ public class CarBuilder
 {
     private string? _name;
     private Body? _body;
-    private List<Engine> _engine = new List<Engine>();
-    private List<Tires> _tires = new List<Tires>();
-    private List<Light> _light = new List<Light>();
+    private List<Part> _engines;
+    private List<Part> _tires;
+    private List<Part> _lights;
 
     public CarBuilder SetName(string name)
     {
@@ -25,45 +25,48 @@ public class CarBuilder
 
     public CarBuilder AddEngine(Engine engine, int partQuantity = 1)
     {
-        for (int i = 0; i < partQuantity; i++) _engine.Add(engine);    
-        return this;
+        return AddPart(engine, _engines, partQuantity);
     }
 
-    public CarBuilder AddTires(Tires tires, int partQuantity = 1)
+    public CarBuilder AddTires(Tires tire, int partQuantity = 1)
     {
-        for (int i = 0; i < partQuantity; i++) _tires.Add(tires);
-        return this;
+        return AddPart(tire, _tires, partQuantity);
     }
 
     public CarBuilder AddLight(Light light, int partQuantity = 1)
     {
-        for (int i = 0; i < partQuantity; i++) _light.Add(light);
-        return this;
+        return AddPart(light, _lights, partQuantity);
+    }
+
+    public CarBuilder AddPart(Part part, List<Part> parts, int partQuantity = 1)
+    {
+        for (int i = 0; i < partQuantity; i++) parts.Add(part);
+        return this;    
     }
     
     public CarBuilder Reset()
     {
         _name = null;
         _body = null;
-        _engine.Clear();
+        _engines.Clear();
         _tires.Clear();
-        _light.Clear();
+        _lights.Clear();
 
         return this;
     }
 
     private int CalcHorsepower()
     {
-        return _engine.Sum(x => x.Horsepower);
+        return _engines.OfType<Engine>().Sum(x => x.Horsepower);
     }
     
     private int CalcWeight()
     {
         return _body.Weight 
                + new List<Part>()
-                    .Union(_engine)
+                    .Union(_engines)
                     .Union(_tires)
-                    .Union(_light)
+                    .Union(_lights)
                     .Sum(x => x.Weight);
     }
     
@@ -71,9 +74,9 @@ public class CarBuilder
     {
         return _body.Price 
                + new List<Part>()
-                   .Union(_engine)
+                   .Union(_engines)
                    .Union(_tires)
-                   .Union(_light)
+                   .Union(_lights)
                    .Sum(x => x.Price);
     }
 
@@ -81,7 +84,7 @@ public class CarBuilder
     {
         var errors = new List<CarDesignerException>();
         if (_body == null) errors.Add(new MissingRequiredPartException("Кузов"));
-        if (_engine.Count == 0) errors.Add(new MissingRequiredPartException("Двигатель"));
+        if (_engines.Count == 0) errors.Add(new MissingRequiredPartException("Двигатель"));
         if (_tires.Count == 0) errors.Add(new MissingRequiredPartException("Колеса"));
         
         return errors;
@@ -100,9 +103,9 @@ public class CarBuilder
             Weight = CalcWeight(),
             Price = CalcPrice(),
             Parts = new List<Part>()
-                .Union(_engine)
+                .Union(_engines)
                 .Union(_tires)
-                .Union(_light)
+                .Union(_lights)
                 .ToList()
         };
     }

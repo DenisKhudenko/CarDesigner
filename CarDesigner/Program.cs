@@ -1,4 +1,7 @@
-﻿var builder = WebApplication.CreateBuilder(args);
+﻿using CarDesigner.BL.Factories;
+using CarDesigner.BL.Factories.Interfaces;
+
+var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
@@ -6,6 +9,9 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+// DI для фабрики пресетов
+builder.Services.AddSingleton<IPresetFactory, PresetFactory>();
 
 var app = builder.Build();
 

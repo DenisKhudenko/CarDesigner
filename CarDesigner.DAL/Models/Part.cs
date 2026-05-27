@@ -56,7 +56,9 @@ namespace CarDesigner.DAL.Models
 	{
 		Summer, // Летняя
 		Winter, // Зимняя
-		AllSeason // Всесезонная
+		AllSeason, // Всесезонная
+		Sport, // Спортивная
+		Offroad // Внедорожная
 	}
 
 	public enum FuelType
@@ -82,9 +84,10 @@ namespace CarDesigner.DAL.Models
 	public enum BodyType
 	{
 		Sedan, // Седан
-		LiftBack, // Лифбек
+		Roadster, // Родстер
 		Coupe, // Купе
-		Crossover, // Кроссовер
-		Sportcar // Спорткар
+		SUV, // Кроссовер
+		Pickup, // Пикап
+		Wagon // Универсал 
 	}
 }

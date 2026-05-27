@@ -1,5 +1,7 @@
-﻿using CarDesigner.BL.Exceptions;
+﻿using System.Diagnostics;
+using CarDesigner.BL.Exceptions;
 using CarDesigner.DAL.Models;
+using CarDesigner.DAL.Models.Catalog;
 
 namespace CarDesigner.BL.Builders;
 
@@ -17,24 +19,27 @@ public class CarBuilder
         return this;
     }
 
-    public CarBuilder SetBody(Body body)
+    public CarBuilder SetBody(string idBody)
     {
-        _body = body;
+        _body = (Body?) getPart("body", idBody);
         return this;
     }
 
-    public CarBuilder AddEngine(Engine engine, int partQuantity = 1)
+    public CarBuilder AddEngine(string idEngine, int partQuantity = 1)
     {
+        var engine = (Engine?) getPart("engine", idEngine);
         return AddPart(engine, _engines, partQuantity);
     }
 
-    public CarBuilder AddTires(Tires tire, int partQuantity = 1)
+    public CarBuilder AddTires(string idTire, int partQuantity = 1)
     {
+        var tire = (Tires?) getPart("tires", idTire);
         return AddPart(tire, _tires, partQuantity);
     }
 
-    public CarBuilder AddLight(Light light, int partQuantity = 1)
+    public CarBuilder AddLight(string idLight, int partQuantity = 1)
     {
+        var light = (Light?) getPart("light", idLight);
         return AddPart(light, _lights, partQuantity);
     }
 
@@ -54,32 +59,7 @@ public class CarBuilder
 
         return this;
     }
-
-    private int CalcHorsepower()
-    {
-        return _engines.OfType<Engine>().Sum(x => x.Horsepower);
-    }
     
-    private int CalcWeight()
-    {
-        return _body.Weight 
-               + new List<Part>()
-                    .Union(_engines)
-                    .Union(_tires)
-                    .Union(_lights)
-                    .Sum(x => x.Weight);
-    }
-    
-    private int CalcPrice()
-    {
-        return _body.Price 
-               + new List<Part>()
-                   .Union(_engines)
-                   .Union(_tires)
-                   .Union(_lights)
-                   .Sum(x => x.Price);
-    }
-
     public IReadOnlyList<CarDesignerException> Validate()
     {
         var errors = new List<CarDesignerException>();
@@ -108,5 +88,46 @@ public class CarBuilder
                 .Union(_lights)
                 .ToList()
         };
+    }
+    
+    private Part? getPart(string type, string id){
+        switch (type)
+        {
+            case "body":
+                return PartsCatalog.Bodies.TryGetValue(id, out var body) ? body : null;
+            case "engine":
+                return PartsCatalog.Engines.TryGetValue(id, out var engine) ? engine : null;
+            case "tires":
+                return PartsCatalog.Tires.TryGetValue(id, out var tires) ? tires : null;
+            case "lights":
+                return PartsCatalog.Lights.TryGetValue(id, out var lights) ? lights : null;
+            default:
+                throw new PartNotFoundException(id, type);
+        }
+    }
+
+    private int CalcHorsepower()
+    {
+        return _engines.OfType<Engine>().Sum(x => x.Horsepower);
+    }
+    
+    private int CalcWeight()
+    {
+        return _body.Weight 
+               + new List<Part>()
+                    .Union(_engines)
+                    .Union(_tires)
+                    .Union(_lights)
+                    .Sum(x => x.Weight);
+    }
+    
+    private int CalcPrice()
+    {
+        return _body.Price 
+               + new List<Part>()
+                   .Union(_engines)
+                   .Union(_tires)
+                   .Union(_lights)
+                   .Sum(x => x.Price);
     }
 }

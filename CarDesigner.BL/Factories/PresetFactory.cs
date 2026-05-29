@@ -6,9 +6,10 @@ using CarDesigner.DAL.Models;
 
 namespace CarDesigner.BL.Factories
 {
-	public class CreateSportCar: IBuildingCar
+	
+	public class PresetFactory: IPresetFactory
 	{
-		public Car? BuildCar(string name)
+		public Car? BuildSportCar()
 		{
 			return new CarBuilder()
 				.SetName("Sport car")
@@ -19,11 +20,8 @@ namespace CarDesigner.BL.Factories
 				.AddLight("backLed", 2)
 				.Build();
 		}
-	}
-	
-	public class CreateSUVCar: IBuildingCar
-	{
-		public Car? BuildCar(string name)
+		
+		public Car? BuildSUVCar()
 		{
 			return new CarBuilder()
 				.SetName("SUV car")
@@ -34,11 +32,8 @@ namespace CarDesigner.BL.Factories
 				.AddLight("backGalogen", 2)
 				.Build();
 		}
-	}
-	
-	public class CreateCoupeCar: IBuildingCar
-	{
-		public Car? BuildCar(string name)
+		
+		public Car? BuildCoupeCar()
 		{
 			return new CarBuilder()
 				.SetName("Coupe car")
@@ -49,16 +44,23 @@ namespace CarDesigner.BL.Factories
 				.AddLight("backGalogen", 2)
 				.Build();
 		}
-	}
-	
-	public class PresetFactory: IPresetFactory
-	{
-		public IBuildingCar Create(string carType) => carType.ToLower() switch
+
+		public IReadOnlyDictionary<string, Delegate> getFactoryDictionary()
 		{
-			"sport" => new CreateSportCar(),
-			"suv" => new CreateSUVCar(),
-			"coupe" => new CreateCoupeCar(),
-			_ => throw new UndefinedCarTypeException(carType)
-		};
+			return new Dictionary<string, Delegate>()
+			{
+				["sport"] = BuildSportCar,
+				["suv"] = BuildSUVCar,
+				["coupe"] = BuildCoupeCar
+			};	
+		}
+		
+		public Car? Create(string carType)
+		{
+			var dictionary = getFactoryDictionary();
+			if (!dictionary.ContainsKey(carType)) throw new UndefinedCarTypeException(carType);
+
+			return dictionary[carType].Target as Car;
+		}
 	}
 }

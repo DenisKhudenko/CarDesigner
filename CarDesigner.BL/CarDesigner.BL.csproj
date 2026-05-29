@@ -11,9 +11,6 @@
     <None Remove="Builders\" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Builders\" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\CarDesigner.DAL\CarDesigner.DAL.csproj" />
   </ItemGroup>
 </Project>

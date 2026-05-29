@@ -2,6 +2,17 @@ namespace CarDesigner.DAL.Models.Catalog;
 
 public static class PartsCatalog
 {
+    public static IReadOnlyDictionary<string, IReadOnlyDictionary<string, Part>> getDictionary()
+    {
+        return new Dictionary<string, IReadOnlyDictionary<string, Part>>()
+        {
+            ["body"] = Bodies.ToDictionary(keyValue => keyValue.Key, keyValue => (Part)keyValue.Value),
+            ["engine"] = Engines.ToDictionary(keyValue => keyValue.Key, keyValue => (Part)keyValue.Value),
+            ["tires"] = Tires.ToDictionary(keyValue => keyValue.Key, keyValue => (Part)keyValue.Value),
+            ["lights"] = Lights.ToDictionary(keyValue => keyValue.Key, keyValue => (Part)keyValue.Value)
+        };
+    }
+    
     // Кузова
     public static readonly IReadOnlyDictionary<string, Body> Bodies = new Dictionary<string, Body>
         {

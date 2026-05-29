@@ -1,11 +1,12 @@
-﻿using System.Diagnostics;
+﻿
+using CarDesigner.BL.Builders.Interfaces;
 using CarDesigner.BL.Exceptions;
 using CarDesigner.DAL.Models;
 using CarDesigner.DAL.Models.Catalog;
 
 namespace CarDesigner.BL.Builders;
 
-public class CarBuilder
+public class CarBuilder : ICarBuilder
 {
     private string? _name;
     private Body? _body;
@@ -21,25 +22,25 @@ public class CarBuilder
 
     public CarBuilder SetBody(string idBody)
     {
-        _body = (Body?) getPart("body", idBody);
+        _body = (Body?) GetPart("body", idBody);
         return this;
     }
 
     public CarBuilder AddEngine(string idEngine, int partQuantity = 1)
     {
-        var engine = (Engine?) getPart("engine", idEngine);
+        var engine = (Engine?) GetPart("engine", idEngine);
         return AddPart(engine, _engines, partQuantity);
     }
 
     public CarBuilder AddTires(string idTire, int partQuantity = 1)
     {
-        var tire = (Tires?) getPart("tires", idTire);
+        var tire = (Tires?) GetPart("tires", idTire);
         return AddPart(tire, _tires, partQuantity);
     }
 
     public CarBuilder AddLight(string idLight, int partQuantity = 1)
     {
-        var light = (Light?) getPart("light", idLight);
+        var light = (Light?) GetPart("light", idLight);
         return AddPart(light, _lights, partQuantity);
     }
 
@@ -90,20 +91,12 @@ public class CarBuilder
         };
     }
     
-    private Part? getPart(string type, string id){
-        switch (type)
-        {
-            case "body":
-                return PartsCatalog.Bodies.TryGetValue(id, out var body) ? body : null;
-            case "engine":
-                return PartsCatalog.Engines.TryGetValue(id, out var engine) ? engine : null;
-            case "tires":
-                return PartsCatalog.Tires.TryGetValue(id, out var tires) ? tires : null;
-            case "lights":
-                return PartsCatalog.Lights.TryGetValue(id, out var lights) ? lights : null;
-            default:
-                throw new PartNotFoundException(id, type);
-        }
+    private Part? GetPart(string type, string id)
+    {
+        var dictionary = PartsCatalog.getDictionary();
+        if (!dictionary.ContainsKey(type)) throw new PartNotFoundException(id, type);
+
+        return dictionary[type].GetValueOrDefault(id);
     }
 
     private int CalcHorsepower()

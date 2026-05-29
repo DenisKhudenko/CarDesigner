@@ -4,11 +4,15 @@ namespace CarDesigner.BL.Services.Interfaces;
 
 public interface ICarDesignerService
 {
-    Task<IReadOnlyCollection<PartResponse>> GetCatalog();
+    Task<IReadOnlyCollection<CatalogResponseDTO>> GetCatalog();
+    
+    Task<IReadOnlyCollection<PresetResponseDTO>> GetPresets();
 
-    Task<BuildRequest?> CreateBuilder(int id);
+    Task<BuildRequestDTO?> CreateBuilder(int id);
 
-    Task<BuildResponse> Preset(BuildResponse dto);
-
-    Task<BuildResponse?> Build(int id, BuildResponse dto);
+    Task<BuildResponseDTO?> Build(int id, BuildResponseDTO dto);
+    
+    Task<BuildResponseDTO?> ResetBuilder(int id);
+    
+    Task<BuildResponseDTO> Preset(BuildResponseDTO dto);
 }

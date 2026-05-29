@@ -1,6 +1,10 @@
 ﻿using System.Reflection;
+using CarDesigner.BL.Builders;
+using CarDesigner.BL.Builders.Interfaces;
 using CarDesigner.BL.Factories;
 using CarDesigner.BL.Factories.Interfaces;
+using CarDesigner.BL.Services;
+using CarDesigner.BL.Services.Interfaces;
 using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -13,6 +17,10 @@ builder.Services.AddSwaggerGen();
 
 // DI для фабрики пресетов
 builder.Services.AddSingleton<IPresetFactory, PresetFactory>();
+
+// DI для построителя авто
+builder.Services.AddScoped<ICarBuilder, CarBuilder>();
+builder.Services.AddScoped<ICarDesignerService, CarDesignerService>();
 
 builder.Services.AddSwaggerGen(swagger =>
 {

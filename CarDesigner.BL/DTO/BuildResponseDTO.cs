@@ -3,7 +3,7 @@ namespace CarDesigner.BL.DTO;
 /// <summary>
 /// Предоставляет маппер ответа данных билдера авто
 /// </summary>
-public class BuildResponse
+public class BuildResponseDTO
 {
     /// <summary>
     /// Наименование авто

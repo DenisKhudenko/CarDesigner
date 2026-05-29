@@ -1,6 +1,8 @@
+using CarDesigner.DAL.Models;
+
 namespace CarDesigner.BL.Factories.Interfaces;
 
 public interface IPresetFactory
 {
-    IBuildingCar Create(string name);
+    public Car? Create(string name);
 }

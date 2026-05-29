@@ -8,8 +8,8 @@ public static class PartsCatalog
         {
             ["body"] = Bodies.ToDictionary(keyValue => keyValue.Key, keyValue => (Part)keyValue.Value),
             ["engine"] = Engines.ToDictionary(keyValue => keyValue.Key, keyValue => (Part)keyValue.Value),
-            ["tires"] = Tires.ToDictionary(keyValue => keyValue.Key, keyValue => (Part)keyValue.Value),
-            ["lights"] = Lights.ToDictionary(keyValue => keyValue.Key, keyValue => (Part)keyValue.Value)
+            ["tire"] = Tires.ToDictionary(keyValue => keyValue.Key, keyValue => (Part)keyValue.Value),
+            ["light"] = Lights.ToDictionary(keyValue => keyValue.Key, keyValue => (Part)keyValue.Value)
         };
     }
     
@@ -19,6 +19,10 @@ public static class PartsCatalog
             ["coupe"] = new()
             {
                 Id = "coupe", Name = "Купе",  Weight = 150, Price = 500000, Type = BodyType.Coupe
+            },
+            ["sport"] = new()
+            {
+                Id = "sport", Name = "Спорт",  Weight = 150, Price = 1500000, Type = BodyType.Coupe
             },
             ["sedan"] = new()
             {

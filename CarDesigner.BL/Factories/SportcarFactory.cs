@@ -8,7 +8,7 @@ public class SportcarFactory : ICarFactory
 {
     public string Name => "Sport car";
     
-    public string CarType => "sportcar";
+    public string CarType => "sport";
     
     public Car? BuildCar()
     {

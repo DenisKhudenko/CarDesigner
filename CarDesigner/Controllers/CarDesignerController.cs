@@ -38,6 +38,18 @@ public class CarDesignerController : ControllerBase
     [SwaggerResponse(statusCode: 200, description: "Получение списка пресетов", type: typeof(IReadOnlyCollection<string>))]
     public async Task<IActionResult> GetPresets()
         => Ok(await _service.GetPresets());
+    
+    /// <summary>
+    /// Создание авто по пресету
+    /// </summary>
+    [HttpPost]
+    [SwaggerResponse(statusCode: 200, description: "Создание авто по пресету", type: typeof(CarResponseDTO))]
+    [SwaggerResponse(statusCode: 404, description: "Ошибка, не удалось создать авто по пресету")]
+    public async Task<IActionResult> Create([FromQuery] string preset)
+    {
+        var created = await _service.BuildPreset(preset);
+        return created is null ? NotFound() : Ok(created);
+    }
 
 }
 

@@ -16,7 +16,7 @@ public class CoupeFactory : ICarFactory
             .SetBody(CarType)
             .AddEngine("v6")
             .AddTires("summer", 4)
-            .AddLight("Xenon", 2)
+            .AddLight("xenon", 2)
             .AddLight("backGalogen", 2)
             .Build();
     }

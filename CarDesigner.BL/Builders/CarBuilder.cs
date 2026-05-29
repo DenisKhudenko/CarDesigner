@@ -10,9 +10,9 @@ public class CarBuilder : ICarBuilder
 {
     private string? _name;
     private Body? _body;
-    private List<Part> _engines;
-    private List<Part> _tires;
-    private List<Part> _lights;
+    private List<Part> _engines = new List<Part>();
+    private List<Part> _tires  = new List<Part>();
+    private List<Part> _lights  = new List<Part>();
 
     public CarBuilder SetName(string name)
     {
@@ -34,7 +34,7 @@ public class CarBuilder : ICarBuilder
 
     public CarBuilder AddTires(string idTire, int partQuantity = 1)
     {
-        var tire = (Tires?) GetPart("tires", idTire);
+        var tire = (Tires?) GetPart("tire", idTire);
         return AddPart(tire, _tires, partQuantity);
     }
 
@@ -67,6 +67,10 @@ public class CarBuilder : ICarBuilder
         if (_body == null) errors.Add(new MissingRequiredPartException("Кузов"));
         if (_engines.Count == 0) errors.Add(new MissingRequiredPartException("Двигатель"));
         if (_tires.Count == 0) errors.Add(new MissingRequiredPartException("Колеса"));
+        
+        if(_engines.Contains(null)) errors.Add(new PartNotFoundException("null", "Двигатели"));
+        if(_tires.Contains(null)) errors.Add(new PartNotFoundException("null", "Шины"));
+        if(_lights.Contains(null)) errors.Add(new PartNotFoundException("null", "Фары"));
         
         return errors;
     }

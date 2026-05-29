@@ -6,32 +6,32 @@ namespace CarDesigner.BL.DTO;
 public class BuildRequestDTO
 {
     /// <summary>
-    /// Id авто
+    /// Id билдера
     /// </summary>
-    public string Id { get; set;  }
+    public string Id { get; set; }
     
     /// <summary>
-    /// Наименование авто
+    /// Наименование билдера
     /// </summary>
-    public string Name { get; set;  }
+    public string? Name { get; set; }
     
     /// <summary>
     /// Id кузова
     /// </summary>
-    public string BodyId { get; set;  }
+    public string? BodyId { get; set; }
     
     /// <summary>
     /// Лист id двигателей
     /// </summary>
-    public IReadOnlyList<string> EngineId { get; set;  }
+    public IReadOnlyCollection<string?> EngineId { get; set; }
     
     /// <summary>
     /// Лист id шин
     /// </summary>
-    public IReadOnlyList<string> TiresId { get; set;  }
+    public IReadOnlyCollection<string?> TiresId { get; set; }
     
     /// <summary>
     /// Лист id фар
     /// </summary>
-    public IReadOnlyList<string> LightId { get; set;  }
+    public IReadOnlyCollection<string?> LightId { get; set; }
 }

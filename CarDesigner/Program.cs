@@ -21,11 +21,11 @@ builder.Services.AddScoped<ICarFactory, SportcarFactory>();
 builder.Services.AddScoped<ICarFactory, SUVFactory>();
 builder.Services.AddScoped<ICarFactory, CoupeFactory>();
 
-// DI для построителя авто
-builder.Services.AddScoped<ICarBuilder, CarBuilder>();
-
 // DI для сервиса
 builder.Services.AddScoped<ICarDesignerService, CarDesignerService>();
+
+// DI для хранения билдеров
+builder.Services.AddSingleton<BuilderStorage>();
 
 builder.Services.AddSwaggerGen(swagger =>
 {

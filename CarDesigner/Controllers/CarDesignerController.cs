@@ -42,12 +42,60 @@ public class CarDesignerController : ControllerBase
     /// <summary>
     /// Создание авто по пресету
     /// </summary>
-    [HttpPost]
+    [HttpPost("createCarFromPreset")]
     [SwaggerResponse(statusCode: 200, description: "Создание авто по пресету", type: typeof(CarResponseDTO))]
     [SwaggerResponse(statusCode: 404, description: "Ошибка, не удалось создать авто по пресету")]
-    public async Task<IActionResult> Create([FromQuery] string preset)
+    public async Task<IActionResult> CreateCarFromPreset([FromQuery] string preset)
     {
         var created = await _service.BuildPreset(preset);
+        return created is null ? NotFound() : Ok(created);
+    }
+    
+    /// <summary>
+    /// Создание билдера авто
+    /// </summary>
+    [HttpPost("createBuilder")]
+    [SwaggerResponse(statusCode: 200, description: "Создание билдера авто", type: typeof(BuildResponseDTO))]
+    [SwaggerResponse(statusCode: 404, description: "Ошибка, не удалось создать билдер авто")]
+    public async Task<IActionResult> CreateBuilder([FromBody] BuildRequestDTO dto)
+    {
+        var created = await _service.CreateBuilder(dto);
+        return created is null ? NotFound() : Ok(created);
+    }
+    
+    /// <summary>
+    /// Дополнение билдера авто
+    /// </summary>
+    [HttpPost("addToBuilder")]
+    [SwaggerResponse(statusCode: 200, description: "Дополнение билдера авто", type: typeof(BuildResponseDTO))]
+    [SwaggerResponse(statusCode: 404, description: "Ошибка, не удалось дополнить билдер авто")]
+    public async Task<IActionResult> AddToBuilder([FromBody] BuildRequestDTO dto)
+    {
+        var created = await _service.AddToBuilder(dto);
+        return created is null ? NotFound() : Ok(created);
+    }
+    
+    /// <summary>
+    /// Запуск сборки билдера
+    /// </summary>
+    [HttpPost("build")]
+    [SwaggerResponse(statusCode: 200, description: "Запуск билдера авто", type: typeof(CarResponseDTO))]
+    [SwaggerResponse(statusCode: 404, description: "Ошибка, не удалось запустить билдер авто")]
+    public async Task<IActionResult> Build([FromQuery] string id)
+    {
+        var created = await _service.Build(id);
+        return created is null ? NotFound() : Ok(created);
+    }
+    
+    /// <summary>
+    /// Сброс билдера авто
+    /// </summary>
+    [HttpPost("resetBuilder")]
+    [SwaggerResponse(statusCode: 200, description: "Сброс билдера авто", type: typeof(BuildResetResponseDTO))]
+    [SwaggerResponse(statusCode: 404, description: "Ошибка, не удалось сбросить билдер авто")]
+    public async Task<IActionResult> ResetBuilder([FromQuery] string id)
+    {
+        var created = await _service.ResetBuilder(id);
         return created is null ? NotFound() : Ok(created);
     }
 

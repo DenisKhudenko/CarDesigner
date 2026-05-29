@@ -1,3 +1,5 @@
+using CarDesigner.BL.Builders;
+using CarDesigner.BL.Builders.Interfaces;
 using CarDesigner.BL.DTO;
 using CarDesigner.BL.Extensions;
 using CarDesigner.BL.Factories.Interfaces;
@@ -9,10 +11,12 @@ namespace CarDesigner.BL.Services;
 public class CarDesignerService : ICarDesignerService
 {
     private readonly IPresetFactory _presetFactory;
+    private readonly Dictionary<string, ICarBuilder> _builders;
     
-    public CarDesignerService(IPresetFactory factory)
+    public CarDesignerService(IPresetFactory factory, BuilderStorage builderStorage)
     {
         _presetFactory = factory;
+        _builders = builderStorage.Builders;
     }
     
     public async Task<IReadOnlyCollection<CatalogResponseDTO>> GetCatalog()
@@ -43,16 +47,35 @@ public class CarDesignerService : ICarDesignerService
     
     public async Task<BuildResponseDTO?> CreateBuilder(BuildRequestDTO dto)
     {
-        throw new NotImplementedException();
+        var builder = dto.CreateBuilderFromRequestDTO();
+        _builders.Add(builder.Id, builder);
+
+        return await Task.FromResult(builder.MapCarBuilderToResponseDTO());
     }
 
-    public async Task<CarResponseDTO?> Build(int id)
+    public async Task<BuildResponseDTO?> AddToBuilder(BuildRequestDTO dto)
     {
-        throw new NotImplementedException();
+        _builders.TryGetValue(dto.Id, out var builder);
+        if (builder is null) return null;
+        
+        return await Task.FromResult(builder.AddToBuilderFromRequestDTO(dto).MapCarBuilderToResponseDTO());
     }
 
-    public async Task<BuildResponseDTO?> ResetBuilder(int id)
+    public async Task<CarResponseDTO?> Build(string id)
     {
-        throw new NotImplementedException();
+        _builders.TryGetValue(id, out var builder);
+        if (builder is null) return null;
+
+        var result = builder.Build().MapCarToResponseDTO();
+        return await Task.FromResult(result);
+    }
+
+    public async Task<BuildResetResponseDTO> ResetBuilder(string id)
+    {
+        _builders.TryGetValue(id, out var builder);
+        if (builder is null) return null;
+
+        var result = builder.Reset().MapBuilderResetToResponseDTO();
+        return await Task.FromResult(result);
     }
 }

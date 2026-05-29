@@ -8,40 +8,53 @@ namespace CarDesigner.BL.Builders;
 
 public class CarBuilder : ICarBuilder
 {
-    private string? _name;
-    private Body? _body;
-    private List<Part> _engines = new List<Part>();
-    private List<Part> _tires  = new List<Part>();
-    private List<Part> _lights  = new List<Part>();
+    public string Id { get; set; }
+    public string? Name { get; set; }
+    public Body? Body { get; set; }
+    public List<Part> Engines { get; set; }
+    public List<Part> Tires { get; set; }
+    public List<Part> Lights { get; set; }
 
+    public CarBuilder SetId(string id)
+    {
+        Id = id;
+        return this;
+    }
+    
     public CarBuilder SetName(string name)
     {
-        _name = name;
+        Name = name;
         return this;
     }
 
     public CarBuilder SetBody(string idBody)
     {
-        _body = (Body?) GetPart("body", idBody);
+        Body = (Body?) GetPart("body", idBody);
         return this;
     }
 
     public CarBuilder AddEngine(string idEngine, int partQuantity = 1)
     {
+        if (Engines == null) Engines = new List<Part>();
+        
         var engine = (Engine?) GetPart("engine", idEngine);
-        return AddPart(engine, _engines, partQuantity);
+        return AddPart(engine, Engines, partQuantity);
     }
 
     public CarBuilder AddTires(string idTire, int partQuantity = 1)
     {
+        if (Tires == null) Tires = new List<Part>();
+        
         var tire = (Tires?) GetPart("tire", idTire);
-        return AddPart(tire, _tires, partQuantity);
+        return AddPart(tire, Tires, partQuantity);
     }
 
     public CarBuilder AddLight(string idLight, int partQuantity = 1)
     {
+        if (Lights == null) Lights = new List<Part>();
+        
         var light = (Light?) GetPart("light", idLight);
-        return AddPart(light, _lights, partQuantity);
+        return AddPart(light, Lights, partQuantity);
     }
 
     public CarBuilder AddPart(Part part, List<Part> parts, int partQuantity = 1)
@@ -52,11 +65,11 @@ public class CarBuilder : ICarBuilder
     
     public CarBuilder Reset()
     {
-        _name = null;
-        _body = null;
-        _engines.Clear();
-        _tires.Clear();
-        _lights.Clear();
+        Name = null;
+        Body = null;
+        Engines.Clear();
+        Tires.Clear();
+        Lights.Clear();
 
         return this;
     }
@@ -64,13 +77,13 @@ public class CarBuilder : ICarBuilder
     public IReadOnlyCollection<CarDesignerException> Validate()
     {
         var errors = new List<CarDesignerException>();
-        if (_body == null) errors.Add(new MissingRequiredPartException("Кузов"));
-        if (_engines.Count == 0) errors.Add(new MissingRequiredPartException("Двигатель"));
-        if (_tires.Count == 0) errors.Add(new MissingRequiredPartException("Колеса"));
+        if (Body == null) errors.Add(new MissingRequiredPartException("Кузов"));
+        if (Engines.Count == 0) errors.Add(new MissingRequiredPartException("Двигатель"));
+        if (Tires.Count == 0) errors.Add(new MissingRequiredPartException("Колеса"));
         
-        if(_engines.Contains(null)) errors.Add(new PartNotFoundException("null", "Двигатели"));
-        if(_tires.Contains(null)) errors.Add(new PartNotFoundException("null", "Шины"));
-        if(_lights.Contains(null)) errors.Add(new PartNotFoundException("null", "Фары"));
+        if(Engines.Contains(null)) errors.Add(new PartNotFoundException("null", "Двигатели"));
+        if(Tires.Contains(null)) errors.Add(new PartNotFoundException("null", "Шины"));
+        if(Lights.Contains(null)) errors.Add(new PartNotFoundException("null", "Фары"));
         
         return errors;
     }
@@ -83,14 +96,14 @@ public class CarBuilder : ICarBuilder
         return new Car()
         {
             Id = Guid.NewGuid().ToString(),
-            Name = _name,
+            Name = Name,
             Horsepower = CalcHorsepower(),
             Weight = CalcWeight(),
             Price = CalcPrice(),
             Parts = new List<Part>()
-                .Union(_engines)
-                .Union(_tires)
-                .Union(_lights)
+                .Union(Engines)
+                .Union(Tires)
+                .Union(Lights)
                 .ToList()
         };
     }
@@ -105,26 +118,26 @@ public class CarBuilder : ICarBuilder
 
     private int CalcHorsepower()
     {
-        return _engines.OfType<Engine>().Sum(x => x.Horsepower);
+        return Engines.OfType<Engine>().Sum(x => x.Horsepower);
     }
     
     private int CalcWeight()
     {
-        return _body.Weight 
+        return Body.Weight 
                + new List<Part>()
-                    .Union(_engines)
-                    .Union(_tires)
-                    .Union(_lights)
+                    .Union(Engines)
+                    .Union(Tires)
+                    .Union(Lights)
                     .Sum(x => x.Weight);
     }
     
     private int CalcPrice()
     {
-        return _body.Price 
+        return Body.Price 
                + new List<Part>()
-                   .Union(_engines)
-                   .Union(_tires)
-                   .Union(_lights)
+                   .Union(Engines)
+                   .Union(Tires)
+                   .Union(Lights)
                    .Sum(x => x.Price);
     }
 }

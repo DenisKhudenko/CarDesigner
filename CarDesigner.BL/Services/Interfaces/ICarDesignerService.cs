@@ -11,8 +11,10 @@ public interface ICarDesignerService
     Task<CarResponseDTO> BuildPreset(string presetName);
 
     Task<BuildResponseDTO?> CreateBuilder(BuildRequestDTO dto);
-
-    Task<CarResponseDTO?> Build(int id);
     
-    Task<BuildResponseDTO?> ResetBuilder(int id);
+    Task<BuildResponseDTO?> AddToBuilder(BuildRequestDTO dto);
+
+    Task<CarResponseDTO?> Build(string id);
+    
+    Task<BuildResetResponseDTO> ResetBuilder(string id);
 }

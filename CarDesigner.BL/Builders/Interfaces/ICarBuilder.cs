@@ -5,6 +5,20 @@ namespace CarDesigner.BL.Builders.Interfaces;
 
 public interface ICarBuilder
 {
+    string Id { get; set; }
+    
+    string? Name { get; set; }
+    
+    Body? Body  { get; set; }
+    
+    List<Part> Engines { get; set; }
+    
+    List<Part> Tires { get; set; }
+    
+    List<Part> Lights { get; set; }
+    
+    CarBuilder SetId (string id);
+    
     CarBuilder SetName(string name);
     
     CarBuilder SetBody(string idBody);

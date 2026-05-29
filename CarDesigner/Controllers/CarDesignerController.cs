@@ -26,10 +26,18 @@ public class CarDesignerController : ControllerBase
     /// <summary>
     /// Получение списка каталогов
     /// </summary>
-    [HttpGet]
-    [SwaggerResponse(statusCode: 200, description: "Получение списка прогнозов погоды", type: typeof(IReadOnlyCollection<PartResponseDTO>))]
+    [HttpGet("catalogs")]
+    [SwaggerResponse(statusCode: 200, description: "Получение списка каталогов", type: typeof(IReadOnlyCollection<PartResponseDTO>))]
     public async Task<IActionResult> GetCatalog()
         => Ok(await _service.GetCatalog());
+    
+    /// <summary>
+    /// Получение списка пресетов
+    /// </summary>
+    [HttpGet("presets")]
+    [SwaggerResponse(statusCode: 200, description: "Получение списка пресетов", type: typeof(IReadOnlyCollection<string>))]
+    public async Task<IActionResult> GetPresets()
+        => Ok(await _service.GetPresets());
 
 }
 

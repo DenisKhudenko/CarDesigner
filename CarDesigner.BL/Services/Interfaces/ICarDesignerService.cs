@@ -6,13 +6,13 @@ public interface ICarDesignerService
 {
     Task<IReadOnlyCollection<CatalogResponseDTO>> GetCatalog();
     
-    Task<IReadOnlyCollection<PresetResponseDTO>> GetPresets();
+    Task<IReadOnlyCollection<string>> GetPresets();
+    
+    Task<CarResponseDTO> BuildPreset(string presetName);
 
-    Task<BuildRequestDTO?> CreateBuilder(int id);
+    Task<BuildResponseDTO?> CreateBuilder(BuildRequestDTO dto);
 
-    Task<BuildResponseDTO?> Build(int id, BuildResponseDTO dto);
+    Task<CarResponseDTO?> Build(int id);
     
     Task<BuildResponseDTO?> ResetBuilder(int id);
-    
-    Task<BuildResponseDTO> Preset(BuildResponseDTO dto);
 }

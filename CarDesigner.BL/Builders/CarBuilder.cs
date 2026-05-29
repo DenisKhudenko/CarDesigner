@@ -61,7 +61,7 @@ public class CarBuilder : ICarBuilder
         return this;
     }
     
-    public IReadOnlyList<CarDesignerException> Validate()
+    public IReadOnlyCollection<CarDesignerException> Validate()
     {
         var errors = new List<CarDesignerException>();
         if (_body == null) errors.Add(new MissingRequiredPartException("Кузов"));
@@ -74,7 +74,7 @@ public class CarBuilder : ICarBuilder
     public Car? Build()
     {
         var errors = Validate();
-        if (errors.Count > 0) throw errors[0];
+        if (errors.Count > 0) throw errors.FirstOrDefault();
         
         return new Car()
         {

@@ -4,5 +4,7 @@ namespace CarDesigner.BL.Factories.Interfaces;
 
 public interface IPresetFactory
 {
-    public Car? Create(string name);
+    Car? Create(string carType);
+
+    IReadOnlyCollection<string> GetPressets();
 }

@@ -19,7 +19,7 @@ public interface ICarBuilder
     
     CarBuilder Reset();
     
-    IReadOnlyList<CarDesignerException> Validate();
+    IReadOnlyCollection<CarDesignerException> Validate();
 
     Car Build();
 }

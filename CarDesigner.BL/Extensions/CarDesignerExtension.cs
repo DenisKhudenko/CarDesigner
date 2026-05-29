@@ -10,6 +10,11 @@ public static class CarDesignerExtension
     {
         return PartResponseFromPart(name, dictionary);
     }
+    
+    public static CarResponseDTO MapCarToResponseDTO(this Car car)
+    {
+        return CarResponseFromCar(car);
+    }
 
     private static CatalogResponseDTO PartResponseFromPart(string name, IReadOnlyDictionary<string, Part>  dictionary)
     {
@@ -24,6 +29,17 @@ public static class CarDesignerExtension
                     Price = kvp.Value.Price,
                     Weight = kvp.Value.Weight  
                 })
+        };
+    }
+
+    private static CarResponseDTO CarResponseFromCar(Car car)
+    {
+        return new CarResponseDTO()
+        {
+            Name = car.Name,
+            Horsepower = car.Horsepower,
+            Weight = car.Weight,
+            Price = car.Price
         };
     }
 }

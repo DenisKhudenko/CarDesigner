@@ -1,3 +1,4 @@
+
 namespace CarDesigner.BL.DTO;
 
 /// <summary>
@@ -6,22 +7,27 @@ namespace CarDesigner.BL.DTO;
 public class BuildResponseDTO
 {
     /// <summary>
-    /// Наименование авто
+    /// Наименование билдера
     /// </summary>
-    public string Name;
+    public string Name { get; set; }
     
     /// <summary>
-    /// Количество лошадиных сил
+    /// Маппер данных кузова авто
     /// </summary>
-    public int Horsepower;
+    public PartResponseDTO Body  { get; set; }
     
     /// <summary>
-    /// Вес авто
+    /// Лист маппера двигателей
     /// </summary>
-    public int Weight;
+    public IReadOnlyList<PartResponseDTO> Engines  { get; set; }
     
     /// <summary>
-    /// Цена авто
+    /// Лист маппера колес
     /// </summary>
-    public int Price;
+    public IReadOnlyList<PartResponseDTO> Tires   { get; set; }
+    
+    /// <summary>
+    /// Лист маппера фар
+    /// </summary>
+    public IReadOnlyList<PartResponseDTO> Lights  { get; set; }
 }

@@ -16,10 +16,15 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 // DI для фабрики пресетов
-builder.Services.AddSingleton<IPresetFactory, PresetFactory>();
+builder.Services.AddScoped<IPresetFactory, PresetFactory>();
+builder.Services.AddScoped<ICarFactory, SportcarFactory>();
+builder.Services.AddScoped<ICarFactory, SUVFactory>();
+builder.Services.AddScoped<ICarFactory, CoupeFactory>();
 
 // DI для построителя авто
 builder.Services.AddScoped<ICarBuilder, CarBuilder>();
+
+// DI для сервиса
 builder.Services.AddScoped<ICarDesignerService, CarDesignerService>();
 
 builder.Services.AddSwaggerGen(swagger =>

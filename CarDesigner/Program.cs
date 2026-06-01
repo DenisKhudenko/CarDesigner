@@ -24,6 +24,9 @@ builder.Services.AddScoped<ICarFactory, CoupeFactory>();
 // DI для сервиса
 builder.Services.AddScoped<ICarDesignerService, CarDesignerService>();
 
+// DI для билдера
+builder.Services.AddScoped<ICarBuilder, CarBuilder>();
+
 // DI для хранения билдеров
 builder.Services.AddSingleton<BuilderStorage>();
 

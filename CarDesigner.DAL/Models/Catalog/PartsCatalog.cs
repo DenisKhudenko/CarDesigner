@@ -14,7 +14,7 @@ public static class PartsCatalog
     }
     
     // Кузова
-    public static readonly IReadOnlyDictionary<string, Body> Bodies = new Dictionary<string, Body>
+    private static readonly IReadOnlyDictionary<string, Body> Bodies = new Dictionary<string, Body>
         {
             ["coupe"] = new()
             {
@@ -47,7 +47,7 @@ public static class PartsCatalog
         };
     
     // Двигатели
-    public static readonly IReadOnlyDictionary<string, Engine> Engines = new Dictionary<string, Engine>
+    private static readonly IReadOnlyDictionary<string, Engine> Engines = new Dictionary<string, Engine>
         {
             ["v4"] = new()
             {
@@ -75,7 +75,7 @@ public static class PartsCatalog
         };
 
     // Шины
-    public static readonly IReadOnlyDictionary<string, Tires> Tires = new Dictionary<string, Tires>
+    private static readonly IReadOnlyDictionary<string, Tires> Tires = new Dictionary<string, Tires>
         {
             ["sport"] = new()
             {
@@ -104,7 +104,7 @@ public static class PartsCatalog
         };
     
     // Фары
-    public static readonly IReadOnlyDictionary<string, Light> Lights = new Dictionary<string, Light>
+    private static readonly IReadOnlyDictionary<string, Light> Lights = new Dictionary<string, Light>
     {
         ["headGalogen"] = new() { 
             Id = "headGalogen", Name = "Передняя галоген", Weight = 30, Price = 10000, 

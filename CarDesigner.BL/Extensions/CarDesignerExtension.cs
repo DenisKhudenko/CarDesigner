@@ -10,17 +10,48 @@ public static class CarDesignerExtension
     public static CatalogResponseDTO MapDictionaryPartToCatalogResponseDto(
         this IReadOnlyDictionary<string, Part> dictionary, string name)
     {
-        return PartResponseFromCatalog(name, dictionary);
+        return new CatalogResponseDTO
+        {
+            Name = name,
+            Part = dictionary.ToDictionary(kvp => kvp.Key,
+                kvp => PartResponseFromPart(kvp.Value))
+        };
     }
     
     public static CarResponseDTO MapCarToResponseDTO(this Car car)
     {
-        return CarResponseFromCar(car);
+        return new CarResponseDTO()
+        {
+            Name = car.Name,
+            Horsepower = car.Horsepower,
+            Weight = car.Weight,
+            Price = car.Price
+        };
     }
     
     public static BuildResponseDTO MapCarBuilderToResponseDTO(this ICarBuilder carBuilder)
     {
-        return CarBuilderResponseFromCarBuilder(carBuilder);
+        return new BuildResponseDTO()
+        {
+            Id = carBuilder.Id,
+            Name = carBuilder.Name,
+            Body = carBuilder.Parts
+                .Where(part => part.PartType == PartType.Body)
+                .Select(part => part.MapPartToResponseDTO())
+                .FirstOrDefault(),
+            Engines = carBuilder.Parts
+                .Where(part => part.PartType == PartType.Engine)
+                .Select(part => part.MapPartToResponseDTO())
+                .ToList(),
+            Tires = carBuilder.Parts
+                .Where(part => part.PartType == PartType.Tires)
+                .Select(part => part.MapPartToResponseDTO())
+                .ToList(),
+            Lights = carBuilder.Parts
+                .Where(part => part.PartType == PartType.Light)
+                .Select(part => part.MapPartToResponseDTO())
+                .ToList()
+        };
     }
     
     public static PartResponseDTO MapPartToResponseDTO(this Part part)
@@ -44,7 +75,7 @@ public static class CarDesignerExtension
         carBuilder
             .SetName(buildRequest.Name)
             .SetId(buildRequest.Id)
-            .SetBody(buildRequest.BodyId);
+            .AddBody(buildRequest.BodyId);
 
         foreach (var engineId in buildRequest.EngineId)
         {
@@ -63,16 +94,6 @@ public static class CarDesignerExtension
         
         return carBuilder;
     }
-
-    private static CatalogResponseDTO PartResponseFromCatalog(string name, IReadOnlyDictionary<string, Part>  dictionary)
-    {
-        return new CatalogResponseDTO
-        {
-            Name = name,
-            Part = dictionary.ToDictionary(kvp => kvp.Key,
-                kvp => PartResponseFromPart(kvp.Value))
-        };
-    }
     
     private static PartResponseDTO PartResponseFromPart(Part part)
     {
@@ -84,28 +105,5 @@ public static class CarDesignerExtension
             Weight = part.Weight
         };
     }
-
-    private static CarResponseDTO CarResponseFromCar(Car car)
-    {
-        return new CarResponseDTO()
-        {
-            Name = car.Name,
-            Horsepower = car.Horsepower,
-            Weight = car.Weight,
-            Price = car.Price
-        };
-    }
     
-    private static BuildResponseDTO CarBuilderResponseFromCarBuilder(ICarBuilder carBuilder)
-    {
-        return new BuildResponseDTO()
-        {
-            Id = carBuilder.Id,
-            Name = carBuilder.Name,
-            Body = carBuilder.Body.MapPartToResponseDTO(),
-            Engines = carBuilder.Engines.Select(part => part.MapPartToResponseDTO()).ToList(),
-            Tires = carBuilder.Tires.Select(part => part.MapPartToResponseDTO()).ToList(),
-            Lights = carBuilder.Lights.Select(part => part.MapPartToResponseDTO()).ToList()
-        };
-    }
 }

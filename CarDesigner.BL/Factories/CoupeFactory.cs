@@ -13,7 +13,7 @@ public class CoupeFactory : ICarFactory
     {
         return new CarBuilder()
             .SetName(Name)
-            .SetBody(CarType)
+            .AddBody(CarType)
             .AddEngine("v6")
             .AddTires("summer", 4)
             .AddLight("xenon", 2)

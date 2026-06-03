@@ -14,7 +14,7 @@ public class SUVFactory : ICarFactory
     {
         return new CarBuilder()
             .SetName(Name)
-            .SetBody(CarType)
+            .AddBody(CarType)
             .AddEngine("v8")
             .AddTires("offroad", 4)
             .AddLight("headGalogen", 2)

@@ -10,10 +10,7 @@ public class CarBuilder : ICarBuilder
 {
     public string Id { get; set; }
     public string? Name { get; set; }
-    public Body? Body { get; set; }
-    public List<Part> Engines { get; set; }
-    public List<Part> Tires { get; set; }
-    public List<Part> Lights { get; set; }
+    public List<Part> Parts { get; set; } = new List<Part>();
 
     public CarBuilder SetId(string id)
     {
@@ -27,49 +24,37 @@ public class CarBuilder : ICarBuilder
         return this;
     }
 
-    public CarBuilder SetBody(string idBody)
+    public CarBuilder AddBody(string idBody)
     {
-        Body = (Body?) GetPart("body", idBody);
-        return this;
+        return AddPart(idBody, PartType.Body);;
     }
 
     public CarBuilder AddEngine(string idEngine, int partQuantity = 1)
     {
-        if (Engines == null) Engines = new List<Part>();
-        
-        var engine = (Engine?) GetPart("engine", idEngine);
-        return AddPart(engine, Engines, partQuantity);
+        return AddPart(idEngine, PartType.Engine, partQuantity);
     }
 
     public CarBuilder AddTires(string idTire, int partQuantity = 1)
     {
-        if (Tires == null) Tires = new List<Part>();
-        
-        var tire = (Tires?) GetPart("tire", idTire);
-        return AddPart(tire, Tires, partQuantity);
+        return AddPart(idTire, PartType.Tires, partQuantity);
     }
 
     public CarBuilder AddLight(string idLight, int partQuantity = 1)
     {
-        if (Lights == null) Lights = new List<Part>();
-        
-        var light = (Light?) GetPart("light", idLight);
-        return AddPart(light, Lights, partQuantity);
+        return AddPart(idLight, PartType.Light, partQuantity);
     }
 
-    public CarBuilder AddPart(Part part, List<Part> parts, int partQuantity = 1)
+    public CarBuilder AddPart(string id, PartType type, int partQuantity = 1)
     {
-        for (int i = 0; i < partQuantity; i++) parts.Add(part);
+        var part = GetPart(type, id);
+        for (int i = 0; i < partQuantity; i++) Parts.Add(part);
         return this;    
     }
     
     public CarBuilder Reset()
     {
         Name = null;
-        Body = null;
-        Engines.Clear();
-        Tires.Clear();
-        Lights.Clear();
+        Parts.Clear();
 
         return this;
     }
@@ -77,13 +62,9 @@ public class CarBuilder : ICarBuilder
     public IReadOnlyCollection<CarDesignerException> Validate()
     {
         var errors = new List<CarDesignerException>();
-        if (Body == null) errors.Add(new MissingRequiredPartException("Кузов"));
-        if (Engines.Count == 0) errors.Add(new MissingRequiredPartException("Двигатель"));
-        if (Tires.Count == 0) errors.Add(new MissingRequiredPartException("Колеса"));
-        
-        if(Engines.Contains(null)) errors.Add(new PartNotFoundException("null", "Двигатели"));
-        if(Tires.Contains(null)) errors.Add(new PartNotFoundException("null", "Шины"));
-        if(Lights.Contains(null)) errors.Add(new PartNotFoundException("null", "Фары"));
+        if (!CheckPartInBuilder(PartType.Body)) errors.Add(new MissingRequiredPartException("Кузов"));
+        if (!CheckPartInBuilder(PartType.Engine)) errors.Add(new MissingRequiredPartException("Двигатель"));
+        if (!CheckPartInBuilder(PartType.Tires)) errors.Add(new MissingRequiredPartException("Колеса"));
         
         return errors;
     }
@@ -93,51 +74,33 @@ public class CarBuilder : ICarBuilder
         var errors = Validate();
         if (errors.Count > 0) throw errors.FirstOrDefault();
         
-        return new Car()
+        Car car = new Car()
         {
             Id = Guid.NewGuid().ToString(),
             Name = Name,
-            Horsepower = CalcHorsepower(),
-            Weight = CalcWeight(),
-            Price = CalcPrice(),
-            Parts = new List<Part>()
-                .Union(Engines)
-                .Union(Tires)
-                .Union(Lights)
-                .ToList()
+            Parts = new List<Part>().Concat(Parts).ToList()
         };
+
+        // Обновляем параметры в новом авто
+        foreach (var part in car.Parts)
+        {
+            if (part == null) continue;
+            part.UpdateCarParameters(car);    
+        }
+        
+        return car;
     }
     
-    private Part? GetPart(string type, string id)
+    private Part? GetPart(PartType type, string id)
     {
         var dictionary = PartsCatalog.getDictionary();
-        if (!dictionary.ContainsKey(type)) throw new PartNotFoundException(id, type);
+        if (!dictionary.ContainsKey(type)) throw new PartNotFoundException(id, type.ToString());
 
         return dictionary[type].GetValueOrDefault(id);
     }
-
-    private int CalcHorsepower()
-    {
-        return Engines.OfType<Engine>().Sum(x => x.Horsepower);
-    }
     
-    private int CalcWeight()
+    private bool CheckPartInBuilder(PartType type)
     {
-        return Body.Weight 
-               + new List<Part>()
-                    .Union(Engines)
-                    .Union(Tires)
-                    .Union(Lights)
-                    .Sum(x => x.Weight);
-    }
-    
-    private int CalcPrice()
-    {
-        return Body.Price 
-               + new List<Part>()
-                   .Union(Engines)
-                   .Union(Tires)
-                   .Union(Lights)
-                   .Sum(x => x.Price);
+        return Parts.FirstOrDefault(part => part.PartType == type) != null;
     }
 }

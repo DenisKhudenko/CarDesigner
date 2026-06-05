@@ -19,20 +19,17 @@ namespace CarDesigner.DAL.Models
 		public required PartType PartType { get; set; }
 
 		// Метод расчета параметров авто
-		public abstract void UpdateCarParameters(Car car);
+		public virtual void UpdateCarParameters(Car car)
+		{
+			car.Weight += Weight;
+			car.Price += Price;	
+		}
 	}
 
     public class Body : Part
     {
         // Тип кузова
         public required BodyType Type { get; init; }
-        
-        // Метод расчета параметров авто
-        public override void UpdateCarParameters(Car car)
-        {
-	        car.Weight += Weight;
-	        car.Price += Price;
-        }
     }
 
     public class Engine : Part
@@ -52,8 +49,7 @@ namespace CarDesigner.DAL.Models
         public override void UpdateCarParameters(Car car)
         {
 	        car.Horsepower += Horsepower;
-	        car.Weight += Weight;
-	        car.Price += Price;
+	        base.UpdateCarParameters(car);
         }
     }
 
@@ -66,13 +62,6 @@ namespace CarDesigner.DAL.Models
 
 		// Тип шины (зимняя, летняя, всесезонная)
 		public required TyresType Type { get; init; }
-		
-		// Метод расчета параметров авто
-		public override void UpdateCarParameters(Car car)
-		{
-			car.Weight += Weight;
-			car.Price += Price;
-		}
 	}
 
     public class Light : Part
@@ -85,12 +74,6 @@ namespace CarDesigner.DAL.Models
         // Позиция установки
         public required InstallationPosition Position { get; init; }
         
-        // Метод расчета параметров авто
-        public override void UpdateCarParameters(Car car)
-        {
-	        car.Weight += Weight;
-	        car.Price += Price;
-        }
     }
 
     public enum PartType

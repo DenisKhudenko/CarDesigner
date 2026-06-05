@@ -14,7 +14,7 @@ public class SportcarFactory : ICarFactory
     {
         return new CarBuilder()
             .SetName(Name)
-            .SetBody(CarType)
+            .AddBody(CarType)
             .AddEngine("w16")
             .AddTires("sport", 4)
             .AddLight("headLed", 2)

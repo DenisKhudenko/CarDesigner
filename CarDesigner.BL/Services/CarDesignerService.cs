@@ -22,7 +22,7 @@ public class CarDesignerService : ICarDesignerService
     public async Task<IReadOnlyCollection<CatalogResponseDTO>> GetCatalog()
     {
         var result = PartsCatalog.getDictionary()
-            .Select(kvp => kvp.Value.MapDictionaryPartToCatalogResponseDto(kvp.Key))
+            .Select(kvp => kvp.Value.MapDictionaryPartToCatalogResponseDto(kvp.Key.ToString()))
             .ToList();
         
         return await Task.FromResult(result);
@@ -55,16 +55,14 @@ public class CarDesignerService : ICarDesignerService
 
     public async Task<BuildResponseDTO?> AddToBuilder(BuildRequestDTO dto)
     {
-        _builders.TryGetValue(dto.Id, out var builder);
-        if (builder is null) return null;
+        if (!_builders.TryGetValue(dto.Id, out var builder)) return null;
         
         return await Task.FromResult(builder.AddToBuilderFromRequestDTO(dto).MapCarBuilderToResponseDTO());
     }
 
     public async Task<CarResponseDTO?> Build(string id)
     {
-        _builders.TryGetValue(id, out var builder);
-        if (builder is null) return null;
+        if (!_builders.TryGetValue(id, out var builder)) return null;
 
         var result = builder.Build().MapCarToResponseDTO();
         return await Task.FromResult(result);
@@ -73,7 +71,6 @@ public class CarDesignerService : ICarDesignerService
     public async Task<BuildResetResponseDTO> ResetBuilder(string id)
     {
         _builders.TryGetValue(id, out var builder);
-        if (builder is null) return null;
 
         var result = builder.Reset().MapBuilderResetToResponseDTO();
         return await Task.FromResult(result);

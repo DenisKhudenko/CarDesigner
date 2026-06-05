@@ -10,16 +10,16 @@ namespace CarDesigner.DAL.Models
 		public required string Name { get; init; }
 
 		// Список запчастей
-		public required IReadOnlyList<Part> Parts { get; init; }
+		public IReadOnlyList<Part> Parts { get; init; }
 
 		// Мощность в лошадиных силах
-		public int Horsepower { get; init; }
+		public int Horsepower { get; set; }
 
 		// Вес
-		public int Weight { get; init; }
+		public int Weight { get; set; }
 
 		// Стоимость
-		public int Price { get; init; }
+		public int Price { get; set; }
 	}
 }
 
